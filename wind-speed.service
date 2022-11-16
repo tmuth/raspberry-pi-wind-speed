@@ -1,0 +1,13 @@
+# put in /etc/systemd/system/wind-speed.service
+
+[Unit]
+Description=Wind Speed Collection
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/bin/python3 /home/user/Documents/wind_speed.py
+
+[Install]
+WantedBy=multi-user.target
