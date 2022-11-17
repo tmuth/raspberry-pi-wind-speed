@@ -38,12 +38,16 @@ endtime = time.time() + interval_seconds
 
 # Get initial state of sensor
 sensorstart = GPIO.input(18)
-output_file=os.path.join(os.path.dirname(__file__),"data","windspeed-"+time.strftime("%Y%m%d-%H%M%S")+".csv")
+
+def get_output_file():
+    output_file_tmp=os.path.join(os.path.dirname(__file__),"data","windspeed-"+time.strftime("%Y%m%d-%H%M%S")+".csv")
+    return output_file_tmp
 
 oled_display.display_text("Sample Interval:",str(interval_seconds)+' seconds')
-
+previous_ymd='0'
+output_file=''
 i=0
-# while i <=10:
+
 while True:
     # Measurement loop to run for n seconds
     while time.time() < endtime:
@@ -73,7 +77,12 @@ while True:
     header = ['time_stamp','wind_speed','rotations_per_second']
     current_datetime = datetime.now().isoformat(sep=" ", timespec="seconds")
     data = [current_datetime,windspeed_mph,round(rots_per_second,2)]
-
+    
+    # check to see if it's a new day. If so, start a new file. 1 file per day
+    current_ymd=time.strftime("%Y%m%d")
+    if current_ymd != previous_ymd:
+        previous_ymd=current_ymd
+        output_file=get_output_file()
 
     with open(output_file, 'a', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
@@ -91,10 +100,5 @@ while True:
     sensorstart = GPIO.input(18)
     
 
-# Print results with decent formatting! :)
-# print('{:.0f} rotations = {:.2f} rotations/second'.format(rotations, rotations/10))
-# print('Windspeed is {:.2f} m/s = {:.2f} mph'.format(windspeed, windspeed*2.237))
-
 # cleanup the GPIO before finishing :)
 GPIO.cleanup()
-
