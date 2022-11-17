@@ -83,22 +83,28 @@ while True:
     if current_ymd != previous_ymd:
         previous_ymd=current_ymd
         output_file=get_output_file()
+        i=0
+    hour=int(time.strftime("%H"))
+    if hour >= 8 and hour <= 20:
+        with open(output_file, 'a', encoding='UTF8', newline='') as f:
+            writer = csv.writer(f)
 
-    with open(output_file, 'a', encoding='UTF8', newline='') as f:
-        writer = csv.writer(f)
+            # write the header but only on the first loop
+            if i==0:
+                writer.writerow(header)
 
-        # write the header but only on the first loop
-        if i==0:
-            writer.writerow(header)
-
-        # write the data
-        writer.writerow(data)
-    i+=1
-    endtime = time.time() + interval_seconds
-    rotations=0
-    trigger=0
-    sensorstart = GPIO.input(18)
+            # write the data
+            writer.writerow(data)
+     
+        i+=1
+        endtime = time.time() + interval_seconds
+        rotations=0
+        trigger=0
+        sensorstart = GPIO.input(18)
+    else:
+        i=0
     
 
 # cleanup the GPIO before finishing :)
 GPIO.cleanup()
+
