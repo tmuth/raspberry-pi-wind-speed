@@ -83,6 +83,7 @@ while True:
     if current_ymd != previous_ymd:
         previous_ymd=current_ymd
         output_file=get_output_file()
+        # new file means we need new headers
         i=0
     hour=int(time.strftime("%H"))
     if hour >= 8 and hour <= 20:
@@ -101,8 +102,6 @@ while True:
         rotations=0
         trigger=0
         sensorstart = GPIO.input(18)
-    else:
-        i=0
     
 
 # cleanup the GPIO before finishing :)
