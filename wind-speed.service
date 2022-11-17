@@ -6,6 +6,8 @@ After=multi-user.target
 
 [Service]
 Type=simple
+User=user
+Group=user
 Restart=always
 ExecStart=/usr/bin/python3 /home/user/Documents/wind_speed.py
 
